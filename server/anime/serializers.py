@@ -1,22 +1,14 @@
-from dataclasses import fields
+from dataclasses import field, fields
+from pyexpat import model
 from statistics import mode
 from rest_framework import serializers
 
 from .models import Anime, Genre
 
-class AnimeSerializer(serializers.ModelSerializer):
-    genres = serializers.SlugRelatedField(slug_field="name", read_only=True, many=True)
-    category = serializers.SlugRelatedField(slug_field="name", read_only=True, many=True)
+
+class AnimeListSerializer(serializers.ModelSerializer):
+    """список Аниме"""
+
     class Meta:
         model = Anime
-        fields = [
-            'id',
-            'title',
-            'description',
-            'poster',
-            'genres',
-            'category',
-            'url',
-            'draft',
-            'trailer'
-        ]
+        fields = ('title','url')

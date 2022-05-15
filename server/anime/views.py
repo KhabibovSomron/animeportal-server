@@ -1,13 +1,15 @@
-from cgitb import lookup
 from rest_framework import generics
+from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from .models import Anime
-from .serializers import AnimeSerializer
+from .serializers import AnimeListSerializer
+from .models import Anime, Genre
 
 
 # Create your views here.
-class AnimeDetailAPIView(generics.RetrieveAPIView):
-    queryset = Anime.objects.all()
-    serializer_class = AnimeSerializer
-    lookup_field = 'url'
+class AnimeListView(APIView):
+    """Вывод списка аниме"""
+    def get(self, request):
+        anime = Anime.objects.filter(draft=False)
+        serializer = AnimeListSerializer(anime, many=True)
+        return Response(serializer.data)
