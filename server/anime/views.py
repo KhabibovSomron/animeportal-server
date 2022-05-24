@@ -1,10 +1,9 @@
 from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from itertools import groupby
 
-from .serializers import AllGenresSerializer, AnimeDetailSerializer, AnimeListSerializer, EpisodeSerializer, SeasonYearSerializer
-from .models import Anime, Episode, Genre, Season
+from .serializers import AllGenresSerializer, AnimeDetailSerializer, AnimeListSerializer, AnimeShotsSerializer, CategorySerializer, EpisodeSerializer, RatingStarSerializer, SeasonYearSerializer
+from .models import Anime, AnimeShots, Category, Episode, Genre, Season, RatingStar
 
 
 # Create your views here.
@@ -72,3 +71,19 @@ class SearchAnimeView(APIView):
         anime = Anime.objects.filter(title__icontains=self.request.GET.get("title"), draft=False)
         serializer = AnimeListSerializer(anime, many=True)
         return Response(serializer.data)
+
+
+class GetRatingStarView(generics.ListAPIView):
+    queryset = RatingStar.objects.all()
+    serializer_class = RatingStarSerializer
+
+
+class GetCategoriesView(generics.ListAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
+class GetAnimeShotsView(APIView):
+    def get(self, request, pk):
+       shots = AnimeShots.objects.filter(anime=pk)
+       serializer = AnimeShotsSerializer(shots, many=True)
+       return Response(serializer.data)

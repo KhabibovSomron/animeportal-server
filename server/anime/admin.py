@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Genre, Category, Anime, Season, Episode, Film
+from .models import AnimeShots, Genre, Category, Anime, Rating, RatingStar, Season, Episode, Film
 # Register your models here.
 
 @admin.register(Genre)
@@ -29,3 +29,15 @@ class EpisodeAdmin(admin.ModelAdmin):
 @admin.register(Film)
 class FilmAdmin(admin.ModelAdmin):
     list_display = ("id", "anime", "title", 'number')
+
+@admin.register(RatingStar)
+class RatingStarAdmin(admin.ModelAdmin):
+    list_display = ("id", "value")
+
+@admin.register(Rating)
+class RatingAdmin(admin.ModelAdmin):
+    list_display = ("id", "ip", "star", "anime")
+
+@admin.register(AnimeShots)
+class AnimeShotsAdmin(admin.ModelAdmin):
+    list_display = ("id", "title", "anime")

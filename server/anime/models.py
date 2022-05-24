@@ -36,7 +36,7 @@ class Anime(models.Model):
     description = models.TextField("Описание")
     poster = models.ImageField("Постер", upload_to="images/anime-poster/")
     genres = models.ManyToManyField(Genre, verbose_name="Жанры")
-    category = models.ManyToManyField(Category, verbose_name="Категория")
+    category = models.ForeignKey(Category, verbose_name="Категория", on_delete=models.SET_NULL, null=True)
     url = models.SlugField(max_length=160, unique=True)
     draft = models.BooleanField("Черновик", default=False)
     trailer = models.CharField("Трайлер", max_length=500, default="")
@@ -104,3 +104,46 @@ class Film(models.Model):
     class Meta:
         verbose_name = "Фильм"
         verbose_name_plural = "Фильм"
+
+
+class AnimeShots(models.Model):
+    """Кадры из аниме"""
+    title = models.CharField("Заголовок", max_length=100)
+    description = models.TextField("Описание")
+    image = models.ImageField("Изображение", upload_to="anime_shots/")
+    anime = models.ForeignKey(Anime, verbose_name="Аниме", on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name = "Кадры из аниме"
+        verbose_name_plural = "Кадры из аниме"
+
+
+class RatingStar(models.Model):
+    """Звезда рейтинга"""
+    value = models.SmallIntegerField("Значение", default=0)
+
+    def __str__(self):
+        return f"{self.value}"
+
+    class Meta:
+        verbose_name = "Звезда рейтинга"
+        verbose_name_plural = "Звезда рейтинга"
+        ordering = ["-value"]
+
+
+class Rating(models.Model):
+    """Рейтинг"""
+    ip = models.CharField("IP адрес", max_length=15)
+    star = models.ForeignKey(RatingStar, on_delete=models.CASCADE, verbose_name="звезда")
+    anime = models.ForeignKey(Anime, on_delete=models.CASCADE, verbose_name="аниме")
+
+    def __str__(self):
+        return f"{self.star} - {self.anime}"
+
+    class Meta:
+        verbose_name = "Рейтинг"
+        verbose_name_plural = "Рейтинг"
+

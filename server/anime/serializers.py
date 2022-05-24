@@ -1,8 +1,9 @@
 import base64
+from dataclasses import fields
 from msilib.schema import File
 from rest_framework import serializers
 
-from .models import Anime, Genre, Season, Episode
+from .models import Anime, AnimeShots, Category, Genre, RatingStar, Season, Episode
 
 
 class AnimeListSerializer(serializers.ModelSerializer):
@@ -80,3 +81,18 @@ class AnimeDetailSerializer(serializers.ModelSerializer):
         serializer = SeasonSerializer(season, many=True)
         return (serializer.data)    
 
+
+class RatingStarSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RatingStar
+        fields = ('id', 'value')
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = ("id", "name", "url")
+
+class AnimeShotsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AnimeShots
+        fields = ('id', 'title', 'image')
