@@ -12,9 +12,12 @@ urlpatterns = [
     path('users/',include('users.urls')),
     path('anime/',include('anime.urls')),
     path('stream/', include('video_hosting.urls')),
+    path('', TemplateView.as_view(template_name='index.html'))
 ]
+
+
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-urlpatterns += [re_path(r'^.*', TemplateView.as_view(template_name='index.html'))]
+# urlpatterns += [re_path(r'^(?:.*)/?$', TemplateView.as_view(template_name='index.html'))]

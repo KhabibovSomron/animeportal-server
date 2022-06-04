@@ -1,6 +1,8 @@
 from django.core.validators import FileExtensionValidator
 from django.db import models
 
+from users.models import UserAccount
+
 # Create your models here.
 class Category(models.Model):
     """Категория"""
@@ -40,6 +42,7 @@ class Anime(models.Model):
     url = models.SlugField(max_length=160, unique=True)
     draft = models.BooleanField("Черновик", default=False)
     trailer = models.CharField("Трайлер", max_length=500, default="")
+    ageRating = models.CharField("Возрастное ограничение", max_length=4, null=True)
 
     def __str__(self):
         return self.title
@@ -74,6 +77,9 @@ class Episode(models.Model):
     title = models.CharField("Название серий", max_length=150, null=True)
     number = models.PositiveSmallIntegerField("Номер серий", default=0)
     image = models.ImageField(upload_to="images/episode-preview/")
+    duration = models.PositiveSmallIntegerField("Длительность", default=0)
+    start_opening = models.PositiveSmallIntegerField("Начало заставки", default=0)
+    end_opening = models.PositiveSmallIntegerField("Конец заставки", default=0)
     file = models.FileField(
         upload_to=f"video/serials/",
         validators=[FileExtensionValidator(allowed_extensions=['mp4'])]
@@ -93,6 +99,7 @@ class Film(models.Model):
     title = models.CharField("Название фильма", max_length=150, null=True)
     number = models.PositiveSmallIntegerField("Номер фильма", default=0)
     image = models.ImageField(upload_to="images/episode-preview/")
+    duration = models.PositiveSmallIntegerField("Длительность", default=0)
     file = models.FileField(
         upload_to=f"video/films/",
         validators=[FileExtensionValidator(allowed_extensions=['mp4'])]
@@ -136,7 +143,7 @@ class RatingStar(models.Model):
 
 class Rating(models.Model):
     """Рейтинг"""
-    ip = models.CharField("IP адрес", max_length=15)
+    user = models.ForeignKey(UserAccount, verbose_name="пользователь", on_delete=models.CASCADE, null=True)
     star = models.ForeignKey(RatingStar, on_delete=models.CASCADE, verbose_name="звезда")
     anime = models.ForeignKey(Anime, on_delete=models.CASCADE, verbose_name="аниме")
 
@@ -146,4 +153,20 @@ class Rating(models.Model):
     class Meta:
         verbose_name = "Рейтинг"
         verbose_name_plural = "Рейтинг"
+
+
+class Reviews(models.Model):
+    """Отзывы"""
+    user = models.ForeignKey(UserAccount, verbose_name="пользователь", on_delete=models.CASCADE, null=True)
+    name = models.CharField("Имя", max_length=100)
+    text = models.TextField("Сообщение", max_length=5000)
+    parent = models.ForeignKey('self', verbose_name="Родитель", on_delete=models.SET_NULL, blank=True, null=True, related_name="children")
+    anime = models.ForeignKey(Anime, verbose_name="Аниме", on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.name} - {self.anime}"
+
+    class Meta:
+        verbose_name = "Отзывы"
+        verbose_name_plural = "Отзывы"
 

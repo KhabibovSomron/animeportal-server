@@ -2,8 +2,8 @@ from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from .serializers import AllGenresSerializer, AnimeDetailSerializer, AnimeListSerializer, AnimeShotsSerializer, CategorySerializer, EpisodeSerializer, RatingStarSerializer, SeasonYearSerializer
-from .models import Anime, AnimeShots, Category, Episode, Genre, Season, RatingStar
+from .serializers import AllGenresSerializer, AnimeDetailSerializer, AnimeFilmSerializer, AnimeListSerializer, AnimeShotsSerializer, CategorySerializer, EpisodeSerializer, GetReviewsSerializer, RatingStarSerializer, ReviewCreateSerializer, SeasonYearSerializer
+from .models import Anime, AnimeShots, Category, Episode, Genre, Reviews, Season, RatingStar, Film
 
 
 # Create your views here.
@@ -87,3 +87,25 @@ class GetAnimeShotsView(APIView):
        shots = AnimeShots.objects.filter(anime=pk)
        serializer = AnimeShotsSerializer(shots, many=True)
        return Response(serializer.data)
+
+class GetAnimeFilms(APIView):
+    def get(self, request, pk):
+       films = Film.objects.filter(anime=pk)
+       serializer = AnimeFilmSerializer(films, many=True)
+       return Response(serializer.data)
+
+
+class ReviewCreateView(APIView):
+    def post(self, request):
+        review = ReviewCreateSerializer(data=request.data)
+        if review.is_valid():
+            review.save()
+        return Response(status=201)
+
+
+class GetAllReviews(APIView):
+    def get(self, request, pk):
+        reviews = Reviews.objects.filter(anime=pk)
+        serializer = GetReviewsSerializer(reviews, many=True)
+        return Response(serializer.data)
+        

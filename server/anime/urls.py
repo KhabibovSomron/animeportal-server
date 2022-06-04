@@ -12,5 +12,8 @@ urlpatterns = [
     path('search/', views.SearchAnimeView.as_view()),
     path('rating-star/', views.GetRatingStarView.as_view()),
     path('categories/', views.GetCategoriesView.as_view()),
-    path('anime-shots/<int:pk>/', views.GetAnimeShotsView.as_view())
+    path('anime-shots/<int:pk>/', views.GetAnimeShotsView.as_view()),
+    path('anime-films/<int:pk>/', views.GetAnimeFilms.as_view()),
+    path('create-review/', views.ReviewCreateView.as_view()),
+    path('reviews/<int:pk>/', views.GetAllReviews.as_view())
 ]
