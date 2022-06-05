@@ -2,7 +2,7 @@ from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from .serializers import AllGenresSerializer, AnimeDetailSerializer, AnimeFilmSerializer, AnimeListSerializer, AnimeShotsSerializer, CategorySerializer, EpisodeSerializer, GetReviewsSerializer, RatingStarSerializer, ReviewCreateSerializer, SeasonYearSerializer
+from .serializers import AllGenresSerializer, AnimeDetailSerializer, AnimeFilmSerializer, AnimeListSerializer, AnimeShotsSerializer, CategorySerializer, EpisodeSerializer, FilmSerializer, GetReviewsSerializer, RatingStarSerializer, ReviewCreateSerializer, SeasonYearSerializer
 from .models import Anime, AnimeShots, Category, Episode, Genre, Reviews, Season, RatingStar, Film
 
 
@@ -53,6 +53,14 @@ class GetEpisodeView(APIView):
     def get(self, request, pk):
         episode = Episode.objects.get(id=pk)
         serializer = EpisodeSerializer(episode)
+        return Response(serializer.data)
+
+
+class GetFilmView(APIView):
+    
+    def get(self, request, pk):
+        film = Film.objects.get(id=pk)
+        serializer = FilmSerializer(film)
         return Response(serializer.data)
 
 

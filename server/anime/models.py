@@ -65,7 +65,7 @@ class Season(models.Model):
     title = models.CharField("Название сезона", max_length=300, null=True)
 
     def __str__(self):
-        return self.title
+        return f'{self.title} - {self.anime}'
 
     class Meta:
         verbose_name = "Сезон"

@@ -53,6 +53,14 @@ class EpisodeSerializer(serializers.ModelSerializer):
         exclude = ('season',)
 
 
+class FilmSerializer(serializers.ModelSerializer):
+    """Фильм"""
+
+    class Meta:
+        model = Film
+        exclude = ('anime',)
+
+
 class SeasonSerializer(serializers.ModelSerializer):
     """Сезоны"""
     episodes = serializers.SerializerMethodField()
